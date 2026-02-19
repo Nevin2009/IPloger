@@ -1,10 +1,28 @@
 import { Database } from "bun:sqlite";
 import path from "path";
+import fs from "fs"; // <-- add this for folder creation
 
-const dbPath = path.join(process.cwd(), ".data", "links.db");
+// ---------------------------
+// Create .data folder if missing
+// ---------------------------
+const dataFolder = path.join(process.cwd(), ".data");
+if (!fs.existsSync(dataFolder)) {
+  fs.mkdirSync(dataFolder, { recursive: true });
+}
 
+// ---------------------------
+// Database path
+// ---------------------------
+const dbPath = path.join(dataFolder, "links.db");
+
+// ---------------------------
+// Open the database
+// ---------------------------
 export const db = new Database(dbPath);
 
+// ---------------------------
+// Create tables if not exist
+// ---------------------------
 db.exec(`
   CREATE TABLE IF NOT EXISTS links (
     id TEXT PRIMARY KEY,
@@ -26,6 +44,9 @@ db.exec(`
   )
 `);
 
+// ---------------------------
+// Prepared queries
+// ---------------------------
 export const linkQueries = {
 	insert: db.prepare(
 		"INSERT INTO links (id, key_hash, url, user_ip, spoo_url) VALUES (?, ?, ?, ?, ?)",
