@@ -23,5 +23,8 @@
     "elysia": "^1.3.5",
     "elysia-rate-limit": "latest",
     "terser": "^5.43.1"
+  },
+  "engines": {
+    "bun": ">=1.3.4"
   }
 }
